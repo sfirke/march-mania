@@ -1,0 +1,361 @@
+team_name,team_id
+Abilene Christian,1101
+Air Force,1102
+Akron,1103
+Alabama,1104
+Alabama A&M,1105
+Alabama St.,1106
+Albany,1107
+Alcorn St.,1108
+American,1110
+Appalachian St.,1111
+Arizona,1112
+Arizona St.,1113
+Arkansas,1116
+Arkansas Little Rock,1114
+Arkansas Pine Bluff,1115
+Arkansas St.,1117
+Army,1119
+Auburn,1120
+Austin Peay,1122
+Ball St.,1123
+Baylor,1124
+Belmont,1125
+Bethune Cookman,1126
+Binghamton,1127
+Birmingham Southern,1128
+Boise St.,1129
+Boston College,1130
+Boston University,1131
+Bowling Green,1132
+Bradley,1133
+Brown,1135
+Bryant,1136
+Bucknell,1137
+Buffalo,1138
+Butler,1139
+BYU,1140
+Cal Poly,1142
+Cal St. Bakersfield,1167
+Cal St. Fullerton,1168
+Cal St. Northridge,1169
+California,1143
+Campbell,1144
+Canisius,1145
+Centenary,1147
+Central Arkansas,1146
+Central Connecticut,1148
+Central Michigan,1141
+Charleston Southern,1149
+Charlotte,1150
+Chattanooga,1151
+Chicago St.,1152
+Cincinnati,1153
+Clemson,1155
+Cleveland St.,1156
+Coastal Carolina,1157
+Colgate,1159
+College of Charleston,1158
+Colorado,1160
+Colorado St.,1161
+Columbia,1162
+Connecticut,1163
+Coppin St.,1164
+Cornell,1165
+Creighton,1166
+Dartmouth,1171
+Davidson,1172
+Dayton,1173
+Delaware,1174
+Delaware St.,1175
+Denver,1176
+DePaul,1177
+Detroit,1178
+Drake,1179
+Drexel,1180
+Duke,1181
+Duquesne,1182
+East Carolina,1187
+East Tennessee St.,1190
+Eastern Illinois,1183
+Eastern Kentucky,1184
+Eastern Michigan,1185
+Eastern Washington,1186
+Elon,1189
+Evansville,1191
+Fairfield,1193
+Fairleigh Dickinson,1192
+FIU,1198
+Florida,1196
+Florida A&M,1197
+Florida Atlantic,1194
+Florida Gulf Coast,1195
+Florida St.,1199
+Fordham,1200
+Fresno St.,1201
+Furman,1202
+Gardner Webb,1205
+George Mason,1206
+George Washington,1203
+Georgetown,1207
+Georgia,1208
+Georgia Southern,1204
+Georgia St.,1209
+Georgia Tech,1210
+Gonzaga,1211
+Grambling St.,1212
+Grand Canyon,1213
+Green Bay,1453
+Hampton,1214
+Hartford,1216
+Harvard,1217
+Hawaii,1218
+High Point,1219
+Hofstra,1220
+Holy Cross,1221
+Houston,1222
+Houston Baptist,1223
+Howard,1224
+Idaho,1225
+Idaho St.,1226
+Illinois,1228
+Illinois Chicago,1227
+Illinois St.,1229
+Incarnate Word,1230
+Indiana,1231
+Indiana St.,1232
+Iona,1233
+Iowa,1234
+Iowa St.,1235
+IPFW,1236
+IUPUI,1237
+Jackson St.,1238
+Jacksonville,1239
+Jacksonville St.,1240
+James Madison,1241
+Kansas,1242
+Kansas St.,1243
+Kennesaw St.,1244
+Kent St.,1245
+Kentucky,1246
+La Salle,1247
+Lafayette,1248
+Lamar,1249
+Lehigh,1250
+Liberty,1251
+Lipscomb,1252
+LIU Brooklyn,1254
+Long Beach St.,1253
+Longwood,1255
+Louisiana Lafayette,1418
+Louisiana Monroe,1419
+Louisiana Tech,1256
+Louisville,1257
+Loyola Chicago,1260
+Loyola Marymount,1258
+Loyola MD,1259
+LSU,1261
+Maine,1263
+Manhattan,1264
+Marist,1265
+Marquette,1266
+Marshall,1267
+Maryland,1268
+Maryland Eastern Shore,1271
+Massachusetts,1269
+McNeese St.,1270
+Memphis,1272
+Mercer,1273
+Miami FL,1274
+Miami OH,1275
+Michigan,1276
+Michigan St.,1277
+Middle Tennessee,1292
+Middle Tennessee St.,1292
+Milwaukee,1454
+Minnesota,1278
+Mississippi,1279
+Mississippi St.,1280
+Mississippi Valley St.,1290
+Missouri,1281
+Missouri St.,1283
+Monmouth,1284
+Montana,1285
+Montana St.,1286
+Morehead St.,1287
+Morgan St.,1288
+Morris Brown,1289
+Mount St. Mary's,1291
+Murray St.,1293
+Navy,1298
+Nebraska,1304
+Nebraska Omaha,1303
+Nevada,1305
+New Hampshire,1306
+New Mexico,1307
+New Mexico St.,1308
+New Orleans,1309
+Niagara,1310
+Nicholls St.,1311
+NJIT,1312
+Norfolk St.,1313
+North Carolina,1314
+North Carolina A&T,1299
+North Carolina Central,1300
+North Carolina St.,1301
+North Dakota,1315
+North Dakota St.,1295
+North Florida,1316
+North Texas,1317
+Northeastern,1318
+Northern Arizona,1319
+Northern Colorado,1294
+Northern Illinois,1296
+Northern Iowa,1320
+Northern Kentucky,1297
+Northwestern,1321
+Northwestern St.,1322
+Notre Dame,1323
+Oakland,1324
+Ohio,1325
+Ohio St.,1326
+Oklahoma,1328
+Oklahoma St.,1329
+Old Dominion,1330
+Oral Roberts,1331
+Oregon,1332
+Oregon St.,1333
+Pacific,1334
+Penn,1335
+Penn St.,1336
+Pepperdine,1337
+Pittsburgh,1338
+Portland,1339
+Portland St.,1340
+Prairie View A&M,1341
+Presbyterian,1342
+Princeton,1343
+Providence,1344
+Purdue,1345
+Quinnipiac,1346
+Radford,1347
+Rhode Island,1348
+Rice,1349
+Richmond,1350
+Rider,1351
+Robert Morris,1352
+Rutgers,1353
+Sacramento St.,1170
+Sacred Heart,1357
+Saint Joseph's,1386
+Saint Louis,1387
+Saint Mary's,1388
+Saint Peter's,1389
+Sam Houston St.,1358
+Samford,1359
+San Diego,1360
+San Diego St.,1361
+San Francisco,1362
+San Jose St.,1363
+Santa Clara,1365
+Savannah St.,1366
+Seattle,1370
+Seton Hall,1371
+Siena,1373
+SIU Edwardsville,1188
+SMU,1374
+South Alabama,1375
+South Carolina,1376
+South Carolina St.,1354
+South Dakota,1377
+South Dakota St.,1355
+South Florida,1378
+Southeast Missouri St.,1369
+Southeastern Louisiana,1368
+Southern,1380
+Southern Illinois,1356
+Southern Miss,1379
+Southern Utah,1381
+Southwest Missouri St.,1283
+Southwest Texas St.,1402
+St. Bonaventure,1382
+St. Francis NY,1383
+St. Francis PA,1384
+St. John's,1385
+Stanford,1390
+Stephen F. Austin,1372
+Stetson,1391
+Stony Brook,1392
+Syracuse,1393
+TCU,1395
+Temple,1396
+Tennessee,1397
+Tennessee Martin,1404
+Tennessee St.,1398
+Tennessee Tech,1399
+Texas,1400
+Texas A&M,1401
+Texas A&M Corpus Chris,1394
+Texas Pan American,1410
+Texas Southern,1411
+Texas St.,1402
+Texas Tech,1403
+The Citadel,1154
+Toledo,1405
+Towson,1406
+Troy,1407
+Troy St.,1407
+Tulane,1408
+Tulsa,1409
+UAB,1412
+UC Davis,1413
+UC Irvine,1414
+UC Riverside,1415
+UC Santa Barbara,1364
+UCF,1416
+UCLA,1417
+UMass Lowell,1262
+UMBC,1420
+UMKC,1282
+UNC Asheville,1421
+UNC Greensboro,1422
+UNC Wilmington,1423
+UNLV,1424
+USC,1425
+USC Upstate,1367
+UT Arlington,1426
+Utah,1428
+Utah St.,1429
+Utah Valley,1430
+Utah Valley St.,1430
+UTEP,1431
+UTSA,1427
+Valparaiso,1434
+Vanderbilt,1435
+VCU,1433
+Vermont,1436
+Villanova,1437
+Virginia,1438
+Virginia Tech,1439
+VMI,1440
+Wagner,1447
+Wake Forest,1448
+Washington,1449
+Washington St.,1450
+Weber St.,1451
+West Virginia,1452
+Western Carolina,1441
+Western Illinois,1442
+Western Kentucky,1443
+Western Michigan,1444
+Wichita St.,1455
+William & Mary,1456
+Winston Salem St.,1445
+Winthrop,1457
+Wisconsin,1458
+Wofford,1459
+Wright St.,1460
+Wyoming,1461
+Xavier,1462
+Yale,1463
+Youngstown St.,1464
