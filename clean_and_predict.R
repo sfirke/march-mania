@@ -1,3 +1,6 @@
+# Script to predict win likelihood for college basketball games based on Ken Pomeroy ratings
+# by Sam Firke - 2016
+
 library(pacman)
 p_load(dplyr, readr, stringr, caret, ggplot2, tidyr)
 
@@ -11,7 +14,21 @@ kp_raw <- bind_rows(
   .id = "year") %>%
   select(-seed, -class) %>%
   mutate(year = 2001 + as.numeric(year)) %>%
-  select(team_name = team, year, pyth = pythagorean_rating, adj_off = adj_offensive_efficiency, adj_def = adj_defensive_efficiency)
+  select(team_name = team, year, pyth = pythagorean_rating, adj_off = adj_offensive_efficiency, adj_def = adj_defensive_efficiency, adj_tempo)
+
+# read preseason rankings, clean names to match Pomeroy
+preseas <- read_csv("mens_cbb_preseason_rankings.csv") %>%
+  mutate(team_name = gsub("State", "St.", team),
+         team_name = plyr::mapvalues(team_name, from = c("Louisiana-Lafayette", "Miami (FL)", "NC St."), to = c("Louisiana Lafayette", "Miami FL", "North Carolina St."))) %>%
+  select(-team) %>%
+  rename(pre_seas_rank = rank)
+
+kp_dat <- left_join(kp_raw, preseas)  %>%
+  mutate(ranked = as.factor(ifelse(is.na(pre_seas_rank), "NO", "YES")),
+         pre_seas_rank_all = pre_seas_rank) %>%
+  select(-pre_seas_rank)
+kp_dat$pre_seas_rank_all <- kp_dat$pre_seas_rank
+kp_dat$pre_seas_rank_all[is.na(kp_dat$pre_seas_rank_all)] <- 30 # impute rank for all unranked teams
 
 # read training data - regular season results
 past_reg_results <- read_csv("kaggle_data/RegularSeasonCompactResults.csv") %>%
@@ -37,15 +54,15 @@ all_past_results <- bind_rows(past_reg_results, past_tourney_results)
 team_crosswalk <- read_csv("ken_pom_to_kaggle_crosswalk.csv")
 
 # Join Pomeroy data to past data to make training set
-kp_dat <- inner_join(kp_raw, team_crosswalk)
+kp_dat <- inner_join(kp_dat, team_crosswalk)
 
 # joins in pomeroy data to a df with year, lower_team, higher_team
 add_kp_data <- function(dat){
   dat %>%
     left_join(., kp_dat, by = c("year", "lower_team" = "team_id")) %>%
-    rename(lower_team_name = team_name, lower_pyth = pyth, lower_adj_off = adj_off, lower_adj_def = adj_def) %>%
+    rename(lower_team_name = team_name, lower_pyth = pyth, lower_adj_off = adj_off, lower_adj_def = adj_def, lower_adj_tempo = adj_tempo, lower_pre_seas_rank_all = pre_seas_rank_all, lower_ranked = ranked) %>%
     left_join(., kp_dat, by = c("year", "higher_team" = "team_id")) %>%
-    rename(higher_team_name = team_name, higher_pyth = pyth, higher_adj_off = adj_off, higher_adj_def = adj_def)
+    rename(higher_team_name = team_name, higher_pyth = pyth, higher_adj_off = adj_off, higher_adj_def = adj_def, higher_adj_tempo = adj_tempo, higher_pre_seas_rank_all = pre_seas_rank_all, higher_ranked = ranked)
 }
 past_dat_full <- add_kp_data(all_past_results)
 
@@ -54,7 +71,9 @@ create_vars_for_prediction <- function(dat){
   dat %>%
     mutate(pyth_diff = lower_pyth - higher_pyth,
            adj_off_diff = lower_adj_off - higher_adj_off,
-           adj_def_diff = lower_adj_def - higher_adj_def)
+           adj_def_diff = lower_adj_def - higher_adj_def,
+           adj_tempo_diff = lower_adj_tempo - higher_adj_tempo,
+           pre_seas_rank_diff = lower_pre_seas_rank_all - higher_pre_seas_rank_all)
             # there are few cases where a very weak team played games but isn't in the Pomeroy table
 }
 past_dat <- create_vars_for_prediction(past_dat_full) %>%
@@ -62,7 +81,7 @@ past_dat <- create_vars_for_prediction(past_dat_full) %>%
          lower_team_court_adv = as.factor(ifelse(lower_team == wteam,
                                                  wloc,
                                                  plyr::mapvalues(wloc, from = c("A", "H", "N"), to = c("H", "A", "N"))))) %>% # reframe home field advantage
-  dplyr::select(lower_team_wins, contains("diff"), lower_team_court_adv) %>% # drop unneeded vars
+  dplyr::select(lower_team_wins, contains("diff"), lower_team_court_adv, contains("rank"), -contains("all")) %>% # drop unneeded vars
   filter(complete.cases(.))
 
 
@@ -86,7 +105,7 @@ stage_1_with_data <- blank_stage_1_preds %>%
   add_kp_data %>%
   create_vars_for_prediction %>%
   mutate(lower_team_court_adv = as.factor("N")) %>%
-  dplyr::select(contains("diff"), lower_team_court_adv)
+  dplyr::select(contains("diff"), lower_team_court_adv, contains("rank"))
 
 stage_1_preds <- predict(top_model, stage_1_with_data, type = "prob")[, 2]
 
@@ -94,6 +113,11 @@ preds_to_send <- read_csv("kaggle_data/SampleSubmission.csv") %>%
   mutate(Pred = stage_1_preds)
 write_csv(preds_to_send, "predictions/glm_1.csv")
 
+# Average with net prophet's
+np_preds <- read_csv("predictions/steal-submission-phase1-net-prophet.csv")
+avg_preds <- inner_join(np_preds, preds_to_send, by = "Id")
+avg_preds$Pred <- rowMeans(avg_preds[, 2:3])
+write_csv(avg_preds %>% select(Id, Pred), "predictions/avg_with_np.csv")
 # Model evaluation - for selecting a model
 
 trControl = trainControl(classProbs=TRUE)
