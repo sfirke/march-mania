@@ -1,2 +1,6 @@
 *.Rhistory
+.Rproj.user
+.Rhistory
+.RData
+predicting-march-madness.Rproj
 predictions/
