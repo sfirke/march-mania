@@ -23,10 +23,10 @@ I'm sharing my code and process here for others to use as a starting point to le
 
 ## What's here
 
-In the March Mania competition, you estimate how likely it is that Team A beats Team B, for each of the >1,000 possible matchups in the tournament.  [My script](march_madness_how_to.Rmd) annotates the code and process for each step of:
+In the March Mania competition, you estimate how likely it is that Team A beats Team B, for each of the >1,000 possible matchups in the tournament.  [My guide](march_madness_how_to.Md) annotates the code and process for each step of:
 
 * Deciding on possible input parameters
-* Scraping web data with the rvest package
+* Scraping the input data with the rvest package
 * Cleaning and joining data sources to get tidy, prediction-ready data
 * Training and evaluating machine learning models on the data
 * Making and submitting predictions
