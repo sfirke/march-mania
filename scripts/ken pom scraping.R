@@ -11,22 +11,21 @@ ken_pom_data_sheet <- gs_key("1AauzEVB-T01TqI2hY81sT6i-gloLwPbTnh8tqsw-TYY")
 process_ken_pom_sheet <- function(dat){
   dat <- dat %>%
     clean_names() %>%
-    separate(x2, into = c("Team", "seed"), sep = " (?=[^ ]+$)", extra = "merge") %>%
-    mutate(x1 = gsub(" [0-9]+", "", x1))
-    names(dat) <- c("rank", "team", "seed", "conf", "wins_losses",
+    mutate(seed = str_extract(x2, "[0-9]+")) %>% # extract seed where applicable
+    mutate(x2 = gsub(" [0-9]+", "", x2)) # remove seed from school name
+    names(dat) <- c("rank", "team", "conf", "wins_losses",
                   "adj_EM", "adj_offensive_efficiency", "adj_offensive_efficiency_seed",
                   "adj_defensive_efficiency", "adj_defensive_efficiency_seed",
                   "adj_tempo", "adj_tempo_seed", "luck", "luck_seed", "sos_adj_em",
                   "sos_adj_em_seed", "opposing_offenses", "opposing_offenses_seed",
                   "opposing_defenses", "opposing_defenses_seed", "ncsos_adj_em",
-                  "ncsos_adj_em_seed", "source_year")
+                  "ncsos_adj_em_seed", "year", "seed")
   
   dat <- dat[-1, ] %>%
-    mutate(class = NA) %>%
-    select(rank, class, everything()) %>%
+    select(rank, everything()) %>%
     filter(!is.na(rank), rank != "Rank") %>%
     mutate(rank = as.numeric(rank)) %>%
-    mutate_at(vars(adj_EM:source_year), parse_number)
+    mutate_at(vars(adj_EM:year), parse_number)
   dat
 }
 
@@ -59,6 +58,4 @@ y2017 <- get_kp_sheet(1)
 kp_2016 <- process_ken_pom_sheet(y2016)
 
 
-
-
-write_csv(kp_2016, "data/ken_pom/kenpom_2016.csv", na = "")
+write_csv(old_years_processed, "data/ken_pom_historical.csv", na = "")
