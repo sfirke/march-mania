@@ -26,7 +26,7 @@ process_ken_pom_sheet <- function(dat){
     select(rank, class, everything()) %>%
     filter(!is.na(rank), rank != "Rank") %>%
     mutate(rank = as.numeric(rank)) %>%
-    mutate(adj_EM = parse_number(adj_EM))
+    mutate_at(vars(adj_EM:source_year), parse_number)
   dat
 }
 
@@ -43,11 +43,22 @@ get_kp_sheet <- function(sheet_n) {
 }    
 
 
-y2016 <- get_kp_sheet(2)
+# Grab and process the old years of data ---------------------------------
+
+# skip the first sheet
+kp_past_years <- seq_along(2002:2016) + 1
+
+old_years_raw <- kp_past_years %>%
+  lapply(get_kp_sheet)
+
+old_years_processed <- lapply(old_years_raw, process_ken_pom_sheet) %>%
+  bind_rows()
+
+# Fix 2017s not having seeds
+y2017 <- get_kp_sheet(1)
 kp_2016 <- process_ken_pom_sheet(y2016)
 
 
-# Fix 2017s not having seeds
 
 
 write_csv(kp_2016, "data/ken_pom/kenpom_2016.csv", na = "")
