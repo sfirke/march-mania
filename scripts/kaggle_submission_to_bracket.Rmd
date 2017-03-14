@@ -43,8 +43,6 @@ simulate_winner_of <- function(team_ids){
 }
 
 # function that takes an even-length data frame of teams, splits into pairs, turns the team IDs into a game ID, gets the winner
-## might be able to do with group_by + summarise, if not then split + purrr::map
-
 process_bi_row <- function(bracket){
   dat <- bracket %>%
     mutate(grp = rep(1:(nrow(.)/2), each = 2)) # group every two rows
@@ -78,11 +76,10 @@ official_64 <- bind_rows(
   )
 ```
 
-## Bracket
+## Regional Brackets
 
 ```{r simulate_and_print, echo=FALSE}
 # Simulate each round and return winners
-# Ideally this returns as a length 5 list, containing a list for each region plus the finals; each sub-list is a list of winners by round (8, then 4, then 2, then 1)
 options(knitr.kable.NA = '')
 
 round_32 <- process_bi_row(official_64) %>% mutate(round = "Round of 32")
