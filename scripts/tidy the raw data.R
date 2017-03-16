@@ -83,6 +83,7 @@ past_dat <- all_past_results %>%
                                                  wloc,
                                                  plyr::mapvalues(wloc, from = c("A", "H", "N"), to = c("H", "A", "N"))))) %>% # reframe home field advantage
   dplyr::select(lower_team_wins, contains("diff"), lower_team_court_adv, contains("rank"), -contains("all")) %>% # drop unneeded vars
-  filter(complete.cases(.))
+  filter(complete.cases(.)) %>%
+  as.data.frame()
 
 # You're now ready to run models on the data.frames currently in memory from this script!
