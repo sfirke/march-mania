@@ -20,7 +20,7 @@ get_preseason_ranks <- function(year) {
 
 }
 
-all_data <- lapply(1962:2017, get_preseason_ranks) %>%
+all_preseason_data <- lapply(1962:2018, get_preseason_ranks) %>%
   bind_rows
 
-write_csv(all_data, "data/mens_cbb_preseason_rankings.csv", na = "")
+write_csv(all_preseason_data, "data/model_inputs/mens_cbb_preseason_rankings.csv", na = "")
