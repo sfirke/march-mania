@@ -1,5 +1,5 @@
 library(pacman)
-p_load(googlesheets, dplyr, stringr, readr, tidyr, janitor)
+p_load(googlesheets, dplyr, stringr, readr, tidyr, janitor, purrr)
 
 # authenticate to the public sheet I created
 # note the formula in the top left cell of each sheet
@@ -43,37 +43,17 @@ get_kp_sheet <- function(sheet_n) {
 }    
 
 
-# Grab and process the old years of data ---------------------------------
+# Grab and process Ken Pomeroy data ---------------------------------
 
 # Ken adds the seeds to the latest year shortly after the official bracket is announced; if scraping before that point, the first sheet will be different as it won't have seeds to separate out.
+# Prior to that point, the current year will have NA for seeds
 
-# In that case, omit the latest year from this next line, add a +1 to the range, and then process that first sheet differently.
+year_seq <- seq_along(2002:2018)
 
-# Fix the most recent year not yet having seeds in the team name field, if doing this before Selection Sunday & Ken adding the seeds to the team name
-
-latest_year_has_seeds <- FALSE
-
-if(!latest_year_has_seeds){
-  y2018 <- get_kp_sheet(1)
-  kp_2018 <- process_ken_pom_sheet(y2018)
-
-  kp_past_years <- seq_along(2002:2017) + 1
-
-  # this will grab all years of data from Google Sheets - takes time
-  old_years_raw <- lapply(kp_past_years, get_kp_sheet)
+# this will grab all years of data from Google Sheets - takes time
+kp_all_years_raw <- year_seq %>% 
+  map(get_kp_sheet)
   
-  old_years_processed <- lapply(old_years_raw, process_ken_pom_sheet) %>%
-    bind_rows()
+kp_all_years_processed <- map_df(kp_all_years_raw, process_ken_pom_sheet)
   
-  # TODO: combine current and previous years
-
-} else {
-  # this will grab all years of data from Google Sheets - takes time
-  kp_all_years_raw <- lapply(seq_along(2002:2018), get_kp_sheet)
-  
-  all_years_processed <- lapply(kp_all_years_raw, process_ken_pom_sheet) %>%
-    bind_rows()
-}
-
-
-write_csv(old_years_processed, "data/ken_pom_historical.csv", na = "")
+write_csv(kp_all_years_processed, "data/model_inputs/ken_pom.csv", na = "")
