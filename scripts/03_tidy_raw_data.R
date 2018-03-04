@@ -86,8 +86,8 @@ past_dat <- all_past_results %>%
   create_vars_for_prediction() %>%
   mutate(lower_team_wins = as.factor(lower_team_wins),
          lower_team_court_adv = as.factor(ifelse(lower_team == wteam,
-                                                 wloc,
-                                                 plyr::mapvalues(wloc, from = c("A", "H", "N"), to = c("H", "A", "N"))))) %>% # reframe home field advantage
+                                                 w_loc,
+                                                 recode(w_loc, "A" = "H", "H" = "A", "N" = "N")))) %>% # reframe home field advantage
   dplyr::select(lower_team_wins, contains("diff"), lower_team_court_adv, contains("rank"), -contains("all")) %>% # drop unneeded vars
   filter(complete.cases(.)) %>%
   as.data.frame()
