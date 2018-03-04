@@ -25,7 +25,8 @@ process_ken_pom_sheet <- function(dat){
     select(rank, everything()) %>%
     filter(!is.na(rank), rank != "Rank") %>%
     mutate(rank = as.numeric(rank)) %>%
-    mutate_at(vars(adj_EM:year), parse_number)
+    mutate_at(vars(adj_EM:year), parse_number) %>%
+    mutate(seed = as.numeric(seed))
   dat
 }
 
@@ -44,18 +45,35 @@ get_kp_sheet <- function(sheet_n) {
 
 # Grab and process the old years of data ---------------------------------
 
-# Ken adds the seeds to the latest year shortly after the official bracket is announced; if scraping before that point, the first sheet will be different
-# As it won't have seeds to separate out.  In that case, omit the latest year from this next line, add a +1 to the range, and then process that first sheet differently.
-kp_past_years <- seq_along(2002:2017)
+# Ken adds the seeds to the latest year shortly after the official bracket is announced; if scraping before that point, the first sheet will be different as it won't have seeds to separate out.
 
-old_years_raw <- kp_past_years %>%
-  lapply(get_kp_sheet)
-
-old_years_processed <- lapply(old_years_raw, process_ken_pom_sheet) %>%
-  bind_rows()
+# In that case, omit the latest year from this next line, add a +1 to the range, and then process that first sheet differently.
 
 # Fix the most recent year not yet having seeds in the team name field, if doing this before Selection Sunday & Ken adding the seeds to the team name
-# y2018 <- get_kp_sheet(1)
-# kp_2018 <- process_ken_pom_sheet(y2018)
+
+latest_year_has_seeds <- FALSE
+
+if(!latest_year_has_seeds){
+  y2018 <- get_kp_sheet(1)
+  kp_2018 <- process_ken_pom_sheet(y2018)
+
+  kp_past_years <- seq_along(2002:2017) + 1
+
+  # this will grab all years of data from Google Sheets - takes time
+  old_years_raw <- lapply(kp_past_years, get_kp_sheet)
+  
+  old_years_processed <- lapply(old_years_raw, process_ken_pom_sheet) %>%
+    bind_rows()
+  
+  # TODO: combine current and previous years
+
+} else {
+  # this will grab all years of data from Google Sheets - takes time
+  kp_all_years_raw <- lapply(seq_along(2002:2018), get_kp_sheet)
+  
+  all_years_processed <- lapply(kp_all_years_raw, process_ken_pom_sheet) %>%
+    bind_rows()
+}
+
 
 write_csv(old_years_processed, "data/ken_pom_historical.csv", na = "")
