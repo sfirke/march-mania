@@ -1,44 +1,59 @@
 # Script to predict win likelihood for college basketball games based on Ken Pomeroy ratings
-# by Sam Firke - 2016/2017
+# by Sam Firke - 2016-2018
 
 #### Data cleaning  -------------------------------------------------------------------------------
 
 
 library(pacman)
-p_load(caret, MASS) # load some ML packages that unfortunately mask dplyr functions
-# devtools::install_github("topepo/caret", subdir = "pkg/caret") # the latest CRAN version, 6.0-73 has a bug that blocks the randomForest code below
+p_load(caret, MASS) # load ML packages that unfortunately mask dplyr functions
 p_load(dplyr, readr, stringr, caret, ggplot2, tidyr)
 
 # read previous years of Ken Pomeroy data
-kp_raw <- read_csv("data/ken_pom_historical.csv") %>%
+kp_raw <- read_csv("data/model_inputs/ken_pom.csv") %>%
   select(team_name = team, year, EM = adj_EM, adj_off = adj_offensive_efficiency, adj_def = adj_defensive_efficiency, adj_tempo)
 
 # read preseason rankings, clean names to match Pomeroy
-preseas <- read_csv("data/mens_cbb_preseason_rankings.csv") %>%
+preseas <- read_csv("data/model_inputs/mens_cbb_preseason_rankings.csv") %>%
+  # recode names to match KP
+  # okay that KP doesn't have NYU, who was ranked in 1964
   mutate(team_name = gsub("State", "St.", team),
-         team_name = plyr::mapvalues(team_name, from = c("Louisiana-Lafayette", "Miami (FL)", "NC St."), to = c("Louisiana Lafayette", "Miami FL", "North Carolina St."))) %>%
+         team_name = recode(team_name, "Louisiana" = "Louisiana Lafayette", "Loyola-Chicago" = "Loyola Chicago", "Miami (FL)" = "Miami FL", "NC St." = "North Carolina St."),
+         team_name = gsub(" \\([A-Z][A-Z]\\)", "", team_name)) %>%
   select(-team) %>%
   rename(pre_seas_rank = rank)
 
 kp_dat <- left_join(kp_raw, preseas) %>%
   mutate(ranked = as.factor(ifelse(is.na(pre_seas_rank), "NO", "YES"))) %>%
   rename(pre_seas_rank_all = pre_seas_rank) %>%
-  mutate(pre_seas_rank_all = if_else(is.na(pre_seas_rank_all), 30, pre_seas_rank_all)) # impute rank for all unranked teams.  This is rough; could I build a model to predict preseason rank from adj_EM and then use that to backfill this?  Tough, as only ranks 1-25 are in the data.
+  
+  # impute rank for all unranked teams.  This is rough.
+  # Could I build a model to predict preseason rank from adj_EM and then use that to backfill this?
+  # Would be difficult, as only ranks 1-25 are in the data.
+  # Would be nice to explore sensitivity of this parameter
+  mutate(pre_seas_rank_all = tidyr::replace_na(pre_seas_rank_all, 30))
+
 
 # read training data - regular season results
+treat_past_results <- function(filename){
+  read_csv(filename) %>%
+    clean_names() %>%
+    rename(year = season, wteam = w_team_id, lteam = l_team_id) %>%
+    mutate(lower_team = pmin(wteam, lteam), # lower refers to ID number
+           higher_team = pmax(wteam, lteam),
+           lower_team_wins = ifelse(lower_team == wteam, "YES", "NO")) # the outcome we'll predict
+}
+
 past_reg_results <- read_csv("data/kaggle/RegularSeasonCompactResults.csv") %>%
-  setNames(tolower(names(.))) %>%
-  rename(year = season) %>%
+  clean_names() %>%
+  rename(year = season, wteam = w_team_id, lteam = l_team_id) %>%
   filter(year > 2001) %>% # don't have Pomeroy ratings before this year
-  mutate(lower_team = pmin(wteam, lteam), # lower refers to ID number
-         higher_team = pmax(wteam, lteam),
-         lower_team_wins = ifelse(lower_team == wteam, "YES", "NO")) # the outcome we'll predict
+
 
 # add in NCAA tourney results from 2003-2012
-past_tourney_results <- read_csv("data/kaggle/TourneyCompactResults.csv") %>%
-  setNames(tolower(names(.))) %>%
-  rename(year = season) %>%
-  filter(year < 2013) %>% # per contest rules, since the first round of predictions includes 2013 tourney games, don't train on those
+past_tourney_results <- read_csv("data/kaggle/NCAATourneyCompactResults.csv") %>%
+  clean_names() %>%
+  rename(year = season, wteam = w_team_id, lteam = l_team_id) %>%
+  filter(year < rev(sort(unique(.$year)))[4]) %>% # per contest rules, since the first round of predictions includes most recent 4 years of tourney games, don't train on those
   mutate(lower_team = pmin(wteam, lteam), # lower refers to ID number
          higher_team = pmax(wteam, lteam),
          lower_team_wins = ifelse(lower_team == wteam, "YES", "NO"))
