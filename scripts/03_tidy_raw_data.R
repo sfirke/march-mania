@@ -43,22 +43,13 @@ treat_past_results <- function(filename){
            lower_team_wins = ifelse(lower_team == wteam, "YES", "NO")) # the outcome we'll predict
 }
 
-past_reg_results <- read_csv("data/kaggle/RegularSeasonCompactResults.csv") %>%
-  clean_names() %>%
-  rename(year = season, wteam = w_team_id, lteam = l_team_id) %>%
-  filter(year > 2001) %>% # don't have Pomeroy ratings before this year
-
-
-# add in NCAA tourney results from 2003-2012
-past_tourney_results <- read_csv("data/kaggle/NCAATourneyCompactResults.csv") %>%
-  clean_names() %>%
-  rename(year = season, wteam = w_team_id, lteam = l_team_id) %>%
-  filter(year < rev(sort(unique(.$year)))[4]) %>% # per contest rules, since the first round of predictions includes most recent 4 years of tourney games, don't train on those
-  mutate(lower_team = pmin(wteam, lteam), # lower refers to ID number
-         higher_team = pmax(wteam, lteam),
-         lower_team_wins = ifelse(lower_team == wteam, "YES", "NO"))
-
-all_past_results <- bind_rows(past_reg_results, past_tourney_results)
+all_past_results <- bind_rows(
+  treat_past_results("data/kaggle/RegularSeasonCompactResults.csv"),
+treat_past_results("data/kaggle/NCAATourneyCompactResults.csv") %>%
+  filter(year < rev(sort(unique(.$year)))[4]), # per contest rules, since the first round of predictions includes most recent 4 years of tourney games, don't train on those
+treat_past_results("data/kaggle/SecondaryTourneyCompactResults.csv") %>%
+  select(-secondary_tourney)
+)
 
 # read team names crosswalk
 team_crosswalk <- read_csv("data/ken_pom_to_kaggle_crosswalk.csv")
