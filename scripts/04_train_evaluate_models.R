@@ -31,6 +31,13 @@ rf_model <- train(y = train_dat$lower_team_wins,
                   ntree = 150
                   )
 
+# prep data for xgboost
+train_xgb <- sparse.model.matrix(lower_team_wins ~ .-1, data = train_dat)
+test_xgb <- sparse.model.matrix(lower_team_wins ~ .-1, data = test_dat)
+
+xgb_model <- train(y = train_dat$lower_team_wins,
+                   x = train_xgb,
+                   method = "xgbTree")
 
 # Model evaluation
 
@@ -47,6 +54,9 @@ log_loss(test_dat$lower_team_wins %>% as.numeric - 1, glm_test_preds)
 
 rf_test_preds <- predict(rf_model, test_dat, type = "prob")[, 2]
 log_loss(test_dat$lower_team_wins %>% as.numeric - 1, rf_test_preds)
+
+xgb_test_preds <- predict(xgb_model, test_xgb, type = "prob")[, 2]
+log_loss(test_dat$lower_team_wins %>% as.numeric - 1, xgb_test_preds)
 
 # Random Forest model has higher log loss due to more extreme predictions
 # may be overconfident b/c not correctly using leaf class percentages?
