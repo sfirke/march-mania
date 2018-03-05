@@ -2,17 +2,19 @@
 Predicting March Madness
 ------------------------
 
-I entered the March Mania competition on Kaggle in 2016. It was my first foray into machine learning and the competition makes for a fun introductory opportunity. My simple process, using tidyverse functions in R, placed in the top 10%.
+Kaggle's March Madness competition is a fun introduction to machine learning. And if you happen to like college basketball, you'll like that in this competition you can't bust your bracket, since you make a prediction for every game.
 
-I'm sharing my code and process here for others to use as a starting point to learn from.
+In 2016, my simple process using tidyverse functions in R placed in the top 10%. I refined it a bit for 2017 and finished in the top 25%.
+
+I'm sharing my code and process here for others to use as a starting point.
 
 What's here
 -----------
 
-In the March Mania competition, you estimate how likely it is that Team A beats Team B, for each of the &gt;1,000 possible matchups in the tournament. [My script](march_madness_how_to.Rmd) annotates the code and process for each step of:
+In the Kaggle competition, you estimate how likely it is that Team A beats Team B, for each of the &gt;1,000 possible matchups in the tournament. **[My guide](march_madness_how_to.Md)** documents a set of scripts for each step of:
 
 -   Deciding on possible input parameters
--   Scraping web data with the rvest package
+-   Scraping the input data with the `rvest` package
 -   Cleaning and joining data sources to get tidy, prediction-ready data
 -   Training and evaluating machine learning models on the data
 -   Making and submitting predictions

@@ -2,6 +2,8 @@
 output:
   md_document:
     variant: markdown_github
+    toc: true
+    toc_depth: 3
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -17,6 +19,10 @@ options(width = 110)
 
 # Making March Madness predictions - a how-to guide
 
+# tl;dr
+
+Run the scripts in the `/scripts` directory, in numerical order.  That, plus the data files in this repository from Kaggle (you can clone the repo, download them via the browser, or get them from Kaggle) will get you up and running with predictions.  Below are expanations of the different scripts and the reasoning behind them.
+
 ## Deciding on input parameters
 
 There's a lot of released data on Kaggle that you could use.  I kept my parameters simple.  I included:
@@ -29,6 +35,9 @@ There is a leakage issue with the Pomeroy ratings, in that the historical rankin
 
 ## Scraping the input data
 
-I used the package [rvest](https://github.com/hadley/rvest) to scrape the preseason rankings from the College Poll Archive.  Here are the [pre-season rankings for 2016](http://collegepollarchive.com/mbasketball/ap/app_preseason.cfm?sort=totapp&from=2016&to=2016), conveniently in a scrape-able HTML table - so let's scrape them for each year.
+I used `rvest` package to scrape the preseason rankings from the College Poll Archive.  Here are the [pre-season rankings for 2018](http://collegepollarchive.com/mbasketball/ap/app_preseason.cfm?sort=totapp&from=2018&to=2018), conveniently in a scrape-able HTML table - so let's scrape them for each year.
 
-See my [short scraping script](scripts/scrape_preseason_ranks.R), which grabs the pre-season rankings for each year and then combines them into a single tidy table.  It's pretty simple; just remember to use SelectorGadget when scraping with rvest, to make sure you target the desired nodes.
+I pseudo-scraped Ken Pomeroy's men's basketball ratings data, going back to 2002.  I mirrored his data in a Google Sheets document, then used the `googlesheets` package to extract and tidy it.
+
+See my [short scraping script](scripts/01_scrape_preseason_ranks.R), which grabs the pre-season rankings for each year and then combines them into a single tidy table, and extracts the Pomeroy ratings.
+

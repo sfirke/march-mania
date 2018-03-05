@@ -1,3 +1,9 @@
+if (!require("pacman")) install.packages("pacman"); library(pacman)
+p_load(caret, MASS) # load ML packages that unfortunately mask dplyr functions
+p_load(tidyverse, modelr)
+
+past_dat <- read_rds("data/model_ready/past_dat.Rds")
+
 
 #### Modelling  -------------------------------------------------------------------------------
 
@@ -12,7 +18,6 @@ glm_model <- train(lower_team_wins ~ .,
                    data = past_dat,
                    method = "glm", family = "binomial")
 
-# skipping bayesglm and glmnet, they are virtually identical in result to simpler logistic regression above, correlation > .9
 
 tc <- trainControl(method = "repeatedcv", number = 4, repeats = 3,
                       classProbs = TRUE,
@@ -36,42 +41,15 @@ log_loss <- function(actual, predicted, eps=0.00001) {
   -1/length(actual)*(sum(actual*log(predicted)+(1-actual)*log(1-predicted)))
 }
 
+
 glm_test_preds <- predict(glm_model, test_dat, type = "prob")[, 2]
 log_loss(test_dat$lower_team_wins %>% as.numeric - 1, glm_test_preds)
 
 rf_test_preds <- predict(rf_model, test_dat, type = "prob")[, 2]
 log_loss(test_dat$lower_team_wins %>% as.numeric - 1, rf_test_preds)
 
-# Train and test ensemble model of random forest, glm - though they have same predictors
-test2_ind <- createDataPartition(test_dat$lower_team_wins, list = FALSE)
-test1_dat <- test_dat[test2_ind, ]
-test2_dat <- test_dat[-test2_ind, ]
-
-preds <- data.frame(glm = predict(glm_model, test1_dat, type = "prob")[, 2],
-                    rf = predict(rf_model, test1_dat, type = "prob")[, 2])
-
-ens1 <- train(y = test1_dat$lower_team_wins,
-              x = preds,
-              method = "glm", family = "binomial")
-
-ens1_preds <- predict(ens1, data.frame(glm = predict(glm_model, test2_dat, type = "prob")[, 2],
-                                       rf = predict(rf_model, test2_dat, type = "prob")[, 2],
-                                       lower_team_wins = test2_dat$lower_team_wins),
-                      type = "prob")[, 2]
-
-log_loss(test2_dat$lower_team_wins %>% as.numeric - 1, ens1_preds) # ensemble has 0.467 log loss, not any better
-
-
-# compare to simpler model on same data
-glm_test_preds_testdat2 <- predict(glm_model, test2_dat, type = "prob")[, 2]
-rf_test_preds_testdat2 <- predict(rf_model, test2_dat, type = "prob")[, 2]
-
-log_loss(test2_dat$lower_team_wins %>% as.numeric - 1, glm_test_preds_testdat2)
-log_loss(test2_dat$lower_team_wins %>% as.numeric - 1, rf_test_preds_testdat2)
-
-# the simpler glm model has log loss 0.458.  Also it is >.99 correlated with the simpler of its two feeder models, vs. .90 correlated with the random forest, implying that the RF input isn't doing much.  Original correlation between glm and rf was 0.91.
-
-# So, skip the randomForest unless I want some more aggressive noise (see my tweet) to make a gamble on my 2nd Kaggle entry.  Maybe sample a few rows from it?
+# Random Forest model has higher log loss due to more extreme predictions
+# may be overconfident b/c not correctly using leaf class percentages?
 
 ### Make predictions for stage 1 ----------------------------
 

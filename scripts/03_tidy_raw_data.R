@@ -4,9 +4,8 @@
 #### Data cleaning  -------------------------------------------------------------------------------
 
 
-library(pacman)
-p_load(caret, MASS) # load ML packages that unfortunately mask dplyr functions
-p_load(dplyr, readr, stringr, caret, ggplot2, tidyr)
+if (!require("pacman")) install.packages("pacman"); library(pacman)
+p_load(tidyverse)
 
 # read previous years of Ken Pomeroy data
 kp_raw <- read_csv("data/model_inputs/ken_pom.csv") %>%
@@ -24,13 +23,24 @@ preseas <- read_csv("data/model_inputs/mens_cbb_preseason_rankings.csv") %>%
 
 kp_dat <- left_join(kp_raw, preseas) %>%
   mutate(ranked = as.factor(ifelse(is.na(pre_seas_rank), "NO", "YES"))) %>%
-  rename(pre_seas_rank_all = pre_seas_rank) %>%
+  rename(pre_seas_rank_all = pre_seas_rank)
   
-  # impute rank for all unranked teams.  This is rough.
-  # Could I build a model to predict preseason rank from adj_EM and then use that to backfill this?
-  # Would be difficult, as only ranks 1-25 are in the data.
-  # Would be nice to explore sensitivity of this parameter
-  mutate(pre_seas_rank_all = tidyr::replace_na(pre_seas_rank_all, 30))
+# impute rank for all unranked teams.  This is rough.
+# Here's a crude formula, created from a regression.  See script stub_estimating_hypothetical...
+# Turns out that preseason rankings is minimally used by the models, so of little import in the end
+
+estimate_pre_season_rank <- function(em){
+  fudge = 2.5 # arbitrary penalty - if these teams were unranked, they weren't perceived to be as good as their EM indicates
+  max(c(
+    (26.04 - em + fudge)/0.4224,
+    1
+  ))
+}
+
+# Impute missing preseason ranks
+kp_dat$pre_seas_rank_all[is.na(kp_dat$pre_seas_rank_all)] <-
+  kp_dat$EM[is.na(kp_dat$pre_seas_rank_all)] %>%
+  estimate_pre_season_rank
 
 
 # read training data - regular season results
@@ -92,4 +102,5 @@ past_dat <- all_past_results %>%
   filter(complete.cases(.)) %>%
   as.data.frame()
 
-# You're now ready to run models on the data.frames currently in memory from this script!
+
+saveRDS(past_dat, "data/model_ready/past_dat.Rds")
