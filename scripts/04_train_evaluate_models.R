@@ -15,7 +15,7 @@ test_dat <- past_dat[-train_index, ]
 
 # Train models for entry
 glm_model <- train(lower_team_wins ~ .,
-                   data = past_dat,
+                   data = train_dat,
                    method = "glm", family = "binomial")
 
 
@@ -39,6 +39,10 @@ xgb_model <- train(y = train_dat$lower_team_wins,
                    x = train_xgb,
                    method = "xgbTree")
 
+xgbl_model <- train(y = train_dat$lower_team_wins,
+                   x = train_xgb,
+                   method = "xgbLinear")
+
 # Model evaluation
 
 # Assess models
@@ -58,13 +62,23 @@ log_loss(test_dat$lower_team_wins %>% as.numeric - 1, rf_test_preds)
 xgb_test_preds <- predict(xgb_model, test_xgb, type = "prob")[, 2]
 log_loss(test_dat$lower_team_wins %>% as.numeric - 1, xgb_test_preds)
 
-# Random Forest model has higher log loss due to more extreme predictions
+xgbl_test_preds <- predict(xgbl_model, test_xgb, type = "prob")[, 2]
+log_loss(test_dat$lower_team_wins %>% as.numeric - 1, xgbl_test_preds)
+
+# Random Forest model has higher log loss, more extreme predictions
 # may be overconfident b/c not correctly using leaf class percentages?
+
+# simple binomial regression performs as well as xgboost, stick with it
+# retrain on all data
+
+top_model <- train(lower_team_wins ~ .,
+                   data = past_dat,
+                   method = "glm", family = "binomial")
+
 
 ### Make predictions for stage 1 ----------------------------
 
 # For stage 1:
-top_model <- glm_model
 
 blank_stage_1_preds <- read_csv("data/kaggle/sample_submission.csv") %>%
   separate(id, into = c("year", "lower_team", "higher_team"), sep = "_", convert = TRUE) %>%
