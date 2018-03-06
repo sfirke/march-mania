@@ -1,6 +1,6 @@
 if (!require("pacman")) install.packages("pacman"); library(pacman)
 p_load(caret, MASS) # load ML packages that unfortunately mask dplyr functions
-p_load(tidyverse, modelr)
+p_load(tidyverse)
 
 past_dat <- read_rds("data/model_ready/past_dat.Rds")
 
@@ -20,16 +20,16 @@ glm_model <- train(lower_team_wins ~ .,
 
 
 tc <- trainControl(method = "repeatedcv", number = 4, repeats = 3,
-                      classProbs = TRUE,
-                      summaryFunction = multiClassSummary)
+                   classProbs = TRUE,
+                   summaryFunction = multiClassSummary)
 
 rf_model <- train(y = train_dat$lower_team_wins,
                   x = train_dat[, -1],
                   method = "rf",
                   do.trace = TRUE,
-              #    trControl = tc,
+                  #    trControl = tc,
                   ntree = 150
-                  )
+)
 
 # prep data for xgboost
 train_xgb <- sparse.model.matrix(lower_team_wins ~ .-1, data = train_dat)
@@ -40,8 +40,8 @@ xgb_model <- train(y = train_dat$lower_team_wins,
                    method = "xgbTree")
 
 xgbl_model <- train(y = train_dat$lower_team_wins,
-                   x = train_xgb,
-                   method = "xgbLinear")
+                    x = train_xgb,
+                    method = "xgbLinear")
 
 # Model evaluation
 
@@ -75,33 +75,7 @@ top_model <- train(lower_team_wins ~ .,
                    data = past_dat,
                    method = "glm", family = "binomial")
 
-
-### Make predictions for stage 1 ----------------------------
-
-# For stage 1:
-
-blank_stage_1_preds <- read_csv("data/kaggle/sample_submission.csv") %>%
-  separate(id, into = c("year", "lower_team", "higher_team"), sep = "_", convert = TRUE) %>%
-  select(-pred)
-
-stage_1_with_data <- blank_stage_1_preds %>%
-  add_kp_data %>%
-  create_vars_for_prediction %>%
-  mutate(lower_team_court_adv = as.factor("N")) %>%
-  dplyr::select(contains("diff"), lower_team_court_adv, contains("rank"))
-
-stage_1_preds <- predict(top_model, stage_1_with_data, type = "prob")[, 2]
-
-preds_to_send <- read_csv("kaggle_data/SampleSubmission.csv") %>% # re-read to get the 3-part Kaggle unique game code 
-  mutate(Pred = stage_1_preds)
-
-write_csv(preds_to_send, "predictions/glm_1.csv")
-
-# For final round: Average with 538 first round predictions
+saveRDS(top_model, "data/models/glm_all_data.Rds")
 
 
-
-
-
-# Add cross-validation
-# Create ensemble?
+# ML part of this is kinda weak.  Could add cross-validation?  Create ensemble?
