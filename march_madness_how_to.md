@@ -36,11 +36,13 @@ There is a leakage issue with the Pomeroy ratings, in that the historical rankin
 Scraping the input data
 -----------------------
 
+*Scripts 01 and 02*
+
 ### Ken Pomeroy's Ratings
 
 I pseudo-scraped Ken Pomeroy's men's basketball ratings data, going back to 2002. I mirrored his data in a Google Sheets document, then used the `googlesheets` package to extract and tidy it.
 
-See my [short googleshets accessing script](scripts/01_ken_pom_scraping.R), which grabs the pre-season rankings for each year and then combines them into a single tidy table, and extracts the Pomeroy ratings.
+See my [short googlesheets accessing script](scripts/01_ken_pom_scraping.R), which grabs the pre-season rankings for each year and then combines them into a single tidy table, and extracts the Pomeroy ratings.
 
 ### Preseason rankings
 
@@ -49,10 +51,14 @@ I used the `rvest` package to scrape the preseason rankings from the College Pol
 Tidying the raw data
 --------------------
 
+*Script 03*
+
 There are lots of data sources to unite and transform. This script takes the various inputs (Kaggle's data on 150k+ past game outcomes, the scraped data, a names crosswalk) and [transforms it into tidy data](scripts/03_tidy_raw_data.R) for modeling.
 
 Training and evaluating models
 ------------------------------
+
+*Script 04*
 
 I know a lot about tidying dirty data. I don't know much about machine learning. Which means this is the part where I learn the most :) In part 4, the script [trains various models](scripts/04_train_evaluate_models.R) on the input data and tests the results. There we select a model with which we'll make our predictions.
 
@@ -60,5 +66,7 @@ You may wish to tweak this part, and I'd particularly welcome feedback and ideas
 
 Making predictions to submit
 ----------------------------
+
+*Script 05*
 
 Pretty simple: once you have your model trained, you'll need to download the Kaggle form of games to predict. In Part 1, it's tourney games from 2014-2017; in the real contest, Part 2, it's every possible game this year. This script takes the Kaggle form and [makes predictions](scripts/05_make_predictions.R) in a ready-to-submit format. (You'll need to have run parts of script 03\_tidy\_raw\_data.R to make functions and a data.frame accessible).
