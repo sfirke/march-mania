@@ -22,7 +22,7 @@ options(width = 110)
 
 # tl;dr
 
-Run the scripts in the `/scripts` directory, in numerical order.  That, plus the data files in this repository from Kaggle (you can clone the repo, download them via the browser, or get them from Kaggle) will get you up and running with predictions.  Below are expanations of the different scripts and the reasoning behind them.
+Run the scripts in the [`/scripts`](/scripts/) directory, in numerical order.  That, plus the data files in this repository from Kaggle (you can clone the repo, download them via the browser, or get them from Kaggle) will get you up and running with predictions.  Below are expanations of the different scripts and the reasoning behind them.
 
 # Each script explained
 
@@ -59,6 +59,8 @@ There are lots of data sources to unite and transform.  This script takes the va
 I know a lot about tidying dirty data.  I don't know much about machine learning.  Which means this is the part where I learn the most :) In part 4, the script [trains various models](scripts/04_train_evaluate_models.R) on the input data and tests the results.  There we select a model with which we'll make our predictions.
 
 You may wish to tweak this part, and I'd particularly welcome feedback and ideas (and pull requests?) here.
+
+It's worth noting that Michael Lopez and Gregory Matthews won this competition in 2014 with a logistic regression model (I think) using Ken Pomeroy ratings data.  Theirs was probably a bit better than this, but it's directionally-close.
 
 ## Making predictions to submit
 *Script 05*
