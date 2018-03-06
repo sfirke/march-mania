@@ -22,7 +22,7 @@ In the Kaggle competition, you estimate how likely it is that Team A beats Team 
 Licensing/usage
 ---------------
 
-This code is public, please reuse it. It's under an [MIT license](License.md). Please acknowledge its role in any write-up or discussion of work that relies on it. And if you win a cash prize from Kaggle using this, congratulations and send me a thank you gift ;)
+This code is public, please reuse it. It's under an [MIT license](License.md). Please acknowledge its role in any write-up or discussion of work that relies on it. And if you win a cash prize from Kaggle using this, congratulations! I wouldn't turn down a thank-you gift ;)
 
 Contact me
 ----------
