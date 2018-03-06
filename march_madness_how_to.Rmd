@@ -30,10 +30,10 @@ Run the scripts in the `/scripts` directory, in numerical order.  That, plus the
 
 There's a lot of released data on Kaggle that you could use.  I kept my parameters simple.  I included:
 
-* Ken Pomeroy's team rankings - a well-regarded rating system of team strength
-* Homefield advantage - teams do better at home, and while tournament games are all technically held on neutral ground, most regular season games (which make up the training set) have a host and a visitor
-* Preseason ranking - some article I read (NY Times?) convinced me that independent of team ranking at the time of the tournament (Pomeroy), a team's preseason ranking has some predictive value of tournament success.  Also, at least in 2016 this data wasn't supplied by Kaggle nor was it in a flat file on the web.  I hoped this unique data source would differentiate my model's prediction.  Luck is a huge factor in this tournament, so some differentiation would set me up to get lucky.
-  * Unfortunately this has not made a big difference in my predictions.
++ Ken Pomeroy's team rankings - a well-regarded rating system of team strength
++ Homefield advantage - teams do better at home, and while tournament games are all technically held on neutral ground, most regular season games (which make up the training set) have a host and a visitor
++ Preseason ranking - some article I read (NY Times?) convinced me that independent of team ranking at the time of the tournament (Pomeroy), a team's preseason ranking has some predictive value of tournament success.  Also, at least in 2016 this data wasn't supplied by Kaggle nor was it in a flat file on the web.  I hoped this unique data source would differentiate my model's prediction.  Luck is a huge factor in this tournament, so some differentiation would set me up to get lucky.
+    + Unfortunately the preseason rankings have not made a big difference in my predictions.
 
 There is a leakage issue with the Pomeroy ratings, in that the historical rankings are end-of-season ratings, and incorporate the results of tournament games that I'm using them to predict.  I don't think this is a big deal and I do not address it.
 
