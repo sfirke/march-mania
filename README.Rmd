@@ -17,7 +17,7 @@ options(width = 110)
 
 ## Predicting March Madness
 
-Kaggle's March Madness competition is an accessible introduction to machine learning.  If you happen to like college basketball, you'll like that in this competition you can't bust your bracket, since you make a prediction for every game.  Plus this year there's a big prize pool, and luck plays a big enough role that you can be a legit contender fairly easily.
+Kaggle's [March Madness prediction competition](https://www.kaggle.com/c/mens-machine-learning-competition-2018/) is an accessible introduction to machine learning.  If you happen to like college basketball, you'll like that in this competition you can't bust your bracket, since you make a prediction for every game.  Plus this year there's a big prize pool, and luck plays a big enough role that you can be a legit contender fairly easily.
 
 In 2016, my simple process using tidyverse functions in R placed in the top 10%.  I refined it a bit for 2017 and finished in the top 25%.
 
