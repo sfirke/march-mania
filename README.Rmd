@@ -25,7 +25,7 @@ I'm sharing my code and process here for others to use as a starting point.  My 
 
 ## What's here
 
-In the Kaggle competition, you estimate how likely it is that Team A beats Team B, for each of the >1,000 possible matchups in the tournament.  **[My guide](march_madness_how_to.md)** documents a set of scripts for each step of:
+In the Kaggle competition, you estimate how likely it is that Team A beats Team B, for each of the 2,278 possible matchups in the tournament.  **[My guide](march_madness_how_to.md)** documents a set of scripts for each step of:
 
 * Deciding on possible input parameters
 * Scraping the input data with the `rvest` package

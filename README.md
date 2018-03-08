@@ -2,16 +2,32 @@
 Predicting March Madness
 ------------------------
 
-Kaggle's [March Madness prediction competition](https://www.kaggle.com/c/mens-machine-learning-competition-2018/) is an accessible introduction to machine learning. If you happen to like college basketball, you'll like that in this competition you can't bust your bracket, since you make a prediction for every game. Plus this year there's a big prize pool, and luck plays a big enough role that you can be a legit contender fairly easily.
+Kaggle’s [March Madness prediction
+competition](https://www.kaggle.com/c/mens-machine-learning-competition-2018/)
+is an accessible introduction to machine learning. If you happen to like
+college basketball, you’ll like that in this competition you can’t bust
+your bracket, since you make a prediction for every game. Plus this year
+there’s a big prize pool, and luck plays a big enough role that you can
+be a legit contender fairly easily.
 
-In 2016, my simple process using tidyverse functions in R placed in the top 10%. I refined it a bit for 2017 and finished in the top 25%.
+In 2016, my simple process using tidyverse functions in R placed in the
+top 10%. I refined it a bit for 2017 and finished in the top 25%.
 
-I'm sharing my code and process here for others to use as a starting point. My approach is similar to that of the 2014 winners, Gregory Matthews and Michael Lopez. They published [a paper about the role that luck plays in this competition](https://arxiv.org/abs/1412.0248), putting their model in perspective. A takeaway: take my model, tweak it a bit to generate some distance from the field, and you are competitive to win!
+I’m sharing my code and process here for others to use as a starting
+point. My approach is similar to that of the 2014 winners, Gregory
+Matthews and Michael Lopez. They published [a paper about the role that
+luck plays in this competition](https://arxiv.org/abs/1412.0248),
+putting their model in perspective. A takeaway: take my model, tweak it
+a bit to generate some distance from the field, and you are competitive
+to win!
 
-What's here
+What’s here
 -----------
 
-In the Kaggle competition, you estimate how likely it is that Team A beats Team B, for each of the &gt;1,000 possible matchups in the tournament. **[My guide](march_madness_how_to.md)** documents a set of scripts for each step of:
+In the Kaggle competition, you estimate how likely it is that Team A
+beats Team B, for each of the 2,278 possible matchups in the tournament.
+**[My guide](march_madness_how_to.md)** documents a set of scripts for
+each step of:
 
 -   Deciding on possible input parameters
 -   Scraping the input data with the `rvest` package
@@ -22,9 +38,15 @@ In the Kaggle competition, you estimate how likely it is that Team A beats Team 
 Licensing/usage
 ---------------
 
-This code is public, please reuse it. It's under an [MIT license](License.md). Please acknowledge its role in any write-up or discussion of work that relies on it. And if you win a cash prize from Kaggle using this, congratulations! I wouldn't turn down a thank-you gift ;)
+This code is public, please reuse it. It’s under an [MIT
+license](License.md). Please acknowledge its role in any write-up or
+discussion of work that relies on it. And if you win a cash prize from
+Kaggle using this, congratulations! I wouldn’t turn down a thank-you
+gift ;)
 
 Contact me
 ----------
 
-Let me know what you think, either on twitter @samfirke or compose a friendly e-mail to: <img src = "http://samfirke.com/wp-content/uploads/2016/07/email_address_whitespace_top.png" alt = "samuel.firke AT gmail" width = "210"/>
+Let me know what you think, either on twitter @samfirke or compose a
+friendly e-mail to:
+<img src = "http://samfirke.com/wp-content/uploads/2016/07/email_address_whitespace_top.png" alt = "samuel.firke AT gmail" width = "210"/>
