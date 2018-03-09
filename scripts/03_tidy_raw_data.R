@@ -56,7 +56,7 @@ treat_past_results <- function(filename){
   }  
   
   out %>%
-    rename(year = season, wteam = w_team_id, lteam = l_team_id) %>%
+    rename(year = season, wteam = wteamid, lteam = lteamid) %>%
     mutate(lower_team = pmin(wteam, lteam), # lower refers to ID number
            higher_team = pmax(wteam, lteam),
            lower_team_wins = ifelse(lower_team == wteam, "YES", "NO")) # the outcome we'll predict
