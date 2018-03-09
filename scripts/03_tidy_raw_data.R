@@ -5,7 +5,7 @@
 
 
 if (!require("pacman")) install.packages("pacman"); library(pacman)
-p_load(tidyverse)
+p_load(tidyverse, janitor)
 
 # read previous years of Ken Pomeroy data
 kp_raw <- read_csv("data/model_inputs/ken_pom.csv") %>%
@@ -45,8 +45,17 @@ kp_dat$pre_seas_rank_all[is.na(kp_dat$pre_seas_rank_all)] <-
 
 # read training data - regular season results
 treat_past_results <- function(filename){
-  read_csv(filename) %>%
-    clean_names() %>%
+  out <- read_csv(filename)
+  
+  if (packageVersion("janitor") > "0.3.1") {
+    out <- out %>%
+      janitor::clean_names(case = "old_janitor")
+  } else {
+    out <- out %>%
+      janitor::clean_names()
+  }  
+  
+  out %>%
     rename(year = season, wteam = w_team_id, lteam = l_team_id) %>%
     mutate(lower_team = pmin(wteam, lteam), # lower refers to ID number
            higher_team = pmax(wteam, lteam),
