@@ -1,6 +1,6 @@
 if (!require("pacman")) install.packages("pacman"); library(pacman)
-p_load(caret, MASS, e1071) # load ML packages that unfortunately mask dplyr functions
-p_load(tidyverse)
+p_load(caret, MASS, e1071, xgboost) # load ML packages that unfortunately mask dplyr functions
+p_load(tidyverse, Matrix)
 
 past_dat <- read_rds("data/model_ready/past_dat.Rds")
 
@@ -75,6 +75,7 @@ top_model <- train(lower_team_wins ~ .,
                    data = past_dat,
                    method = "glm", family = "binomial")
 
+dir.create("data/models")
 saveRDS(top_model, "data/models/glm_all_data.Rds")
 
 
