@@ -38,6 +38,10 @@ In the Kaggle competition, you estimate how likely it is that Team A beats Team 
 
 This code is public, please reuse it.  It's under an [MIT license](License.md).  Please acknowledge its role in any write-up or discussion of work that relies on it.  And if you win a cash prize from Kaggle using this, congratulations!  I wouldn't turn down a thank-you gift ;)
 
+## Thanks
+
+Thanks to contributors **@MHenderson** and **@BillPetti**.
+
 ## Contact me
 
 Let me know what you think, either on twitter @samfirke or compose a friendly e-mail to: <img src = "http://samfirke.com/wp-content/uploads/2016/07/email_address_whitespace_top.png" alt = "samuel.firke AT gmail" width = "210"/>

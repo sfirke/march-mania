@@ -44,6 +44,11 @@ discussion of work that relies on it. And if you win a cash prize from
 Kaggle using this, congratulations! I wouldn’t turn down a thank-you
 gift ;)
 
+Thanks
+------
+
+Thanks to contributors **@MHenderson** and **@BillPetti**.
+
 Contact me
 ----------
 
