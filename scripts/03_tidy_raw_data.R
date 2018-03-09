@@ -47,7 +47,7 @@ kp_dat$pre_seas_rank_all[is.na(kp_dat$pre_seas_rank_all)] <-
 treat_past_results <- function(filename){
   read_csv(filename) %>%
     clean_names() %>%
-    rename(year = season, wteam = w_team_id, lteam = l_team_id) %>%
+    rename(year = season, wteam = wteamid, lteam = lteamid) %>%
     mutate(lower_team = pmin(wteam, lteam), # lower refers to ID number
            higher_team = pmax(wteam, lteam),
            lower_team_wins = ifelse(lower_team == wteam, "YES", "NO")) # the outcome we'll predict
@@ -58,7 +58,7 @@ all_past_results <- bind_rows(
 treat_past_results("data/kaggle/NCAATourneyCompactResults.csv") %>%
   filter(year < rev(sort(unique(.$year)))[4]), # per contest rules, since the first round of predictions includes most recent 4 years of tourney games, don't train on those
 treat_past_results("data/kaggle/SecondaryTourneyCompactResults.csv") %>%
-  select(-secondary_tourney)
+  select(-secondarytourney)
 )
 
 # read team names crosswalk
@@ -96,8 +96,8 @@ past_dat <- all_past_results %>%
   create_vars_for_prediction() %>%
   mutate(lower_team_wins = as.factor(lower_team_wins),
          lower_team_court_adv = as.factor(ifelse(lower_team == wteam,
-                                                 w_loc,
-                                                 recode(w_loc, "A" = "H", "H" = "A", "N" = "N")))) %>% # reframe home field advantage
+                                                 wloc,
+                                                 recode(wloc, "A" = "H", "H" = "A", "N" = "N")))) %>% # reframe home field advantage
   dplyr::select(lower_team_wins, contains("diff"), lower_team_court_adv, contains("rank"), -contains("all")) %>% # drop unneeded vars
   filter(complete.cases(.)) %>%
   as.data.frame()
