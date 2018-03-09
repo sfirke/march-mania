@@ -1,5 +1,5 @@
 if (!require("pacman")) install.packages("pacman"); library(pacman)
-p_load(caret, MASS) # load ML packages that unfortunately mask dplyr functions
+p_load(caret, MASS, e1071) # load ML packages that unfortunately mask dplyr functions
 p_load(tidyverse)
 
 past_dat <- read_rds("data/model_ready/past_dat.Rds")
