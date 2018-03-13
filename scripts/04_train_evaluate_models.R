@@ -34,6 +34,7 @@ rf_model <- train(y = train_dat$lower_team_wins,
 # prep data for xgboost
 train_xgb <- sparse.model.matrix(lower_team_wins ~ .-1, data = train_dat)
 test_xgb <- sparse.model.matrix(lower_team_wins ~ .-1, data = test_dat)
+all_xgb <- sparse.model.matrix(lower_team_wins ~ .-1, data = past_dat)
 
 xgb_model <- train(y = train_dat$lower_team_wins,
                    x = train_xgb,
@@ -74,6 +75,12 @@ log_loss(test_dat$lower_team_wins %>% as.numeric - 1, xgbl_test_preds)
 top_model <- train(lower_team_wins ~ .,
                    data = past_dat,
                    method = "glm", family = "binomial")
+
+xgb_model_all <- train(y = past_dat$lower_team_wins,
+                   x = all_xgb,
+                   method = "xgbTree")
+
+top_model <- xgb_model_all
 
 dir.create("data/models")
 saveRDS(top_model, "data/models/glm_all_data.Rds")

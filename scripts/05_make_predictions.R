@@ -31,7 +31,7 @@ write_csv(preds_to_send, "data/predictions/glm_1.csv")
 # For final round: Average with 538 first round predictions
 # And/or, if you don't mind the impurity, gain an edge by picking a game 100% in one submission and 0% in another
 
-final_blank <- read_csv("data/kaggle/SampleSubmissionStage1.csv") %>%
+final_blank <- read_csv("data/kaggle/SampleSubmissionStage2.csv") %>%
   clean_names() %>%
   separate(id, into = c("year", "lower_team", "higher_team"), sep = "_", remove = FALSE, convert = TRUE) %>%
   dplyr::select(-pred)
@@ -49,7 +49,7 @@ final_preds_1 <- predict(active_model, final_blank_with_data, type = "prob")[, 2
 
 final_preds_to_send <- final_blank %>%
   dplyr::select(id) %>%
-  mutate(Pred = stage_1_preds)
+  mutate(Pred = final_preds_1)
 
 
 write_csv(final_preds_to_send, "data/predictions/final_glm.csv")
