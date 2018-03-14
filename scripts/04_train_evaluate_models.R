@@ -8,7 +8,7 @@ past_dat <- read_rds("data/model_ready/past_dat.Rds")
 #### Modelling  -------------------------------------------------------------------------------
 
 # Partition past data
-set.seed(1)
+set.seed(8675309)
 train_index <- createDataPartition(past_dat$lower_team_wins, list = FALSE)
 train_dat <- past_dat[train_index, ]
 test_dat <- past_dat[-train_index, ]
