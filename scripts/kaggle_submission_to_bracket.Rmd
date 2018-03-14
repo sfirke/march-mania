@@ -1,7 +1,7 @@
 ---
 title: "Random Bracket from Kaggle Submission"
-author: "Sam Firke"
-date: "March 13, 2017"
+author: "Sam Firke & Emile Latour"
+date: "March 14, 2017"
 output: html_document
 ---
 
@@ -19,10 +19,10 @@ p_load(dplyr, readr, knitr, tidyr, purrr, here, forcats)
 
 # Load data
 # read full set of possible game IDs and predictions
-user_predictions <- read_csv(here("predictions/round 2/final_glm.csv"))
+user_predictions <- read_csv(here("data/predictions/final_glm.csv"))
 
 # read list of 68 teams, in order
-official_bracket <- read_csv(here("data/official_bracket_2017.csv"))
+official_bracket <- read_csv(here("data/official_bracket_2018.csv"))
 
 # Keep changing values of set.seed() if you want to be able to recreate a specific bracket
 # set.seed(1)
@@ -35,8 +35,8 @@ simulate_winner_of <- function(team_ids){
   lower_team <- min(team_ids)
   higher_team <- max(team_ids)
   
-  game_id <- paste("2017", lower_team, higher_team, sep = "_")
-  odds_lower_wins <- user_predictions[[2]][user_predictions$Id == game_id]
+  game_id <- paste("2018", lower_team, higher_team, sep = "_")
+  odds_lower_wins <- user_predictions[[2]][user_predictions$id == game_id]
   if_else(runif(1) < odds_lower_wins,
           lower_team, # lower_team wins if random # is below their win odds 
           higher_team)
@@ -64,13 +64,13 @@ bracket %>% filter(id %in% winners)
 ```{r play_in_games}
 # handle the 4 play-in games
 official_64 <- bind_rows(
-  official_bracket %>% dplyr::slice(1),
-  process_bi_row(official_bracket %>% dplyr::slice(2:3)),
-  official_bracket %>% dplyr::slice(4:10),
-  process_bi_row(official_bracket %>% dplyr::slice(11:12)),
-  official_bracket %>% dplyr::slice(13:35),
-  process_bi_row(official_bracket %>% dplyr::slice(36:37)),
-  official_bracket %>% dplyr::slice(38:60),
+  official_bracket %>% dplyr::slice(1:17),
+  process_bi_row(official_bracket %>% dplyr::slice(18:19)),
+  official_bracket %>% dplyr::slice(20:34),
+  process_bi_row(official_bracket %>% dplyr::slice(35:36)),
+  official_bracket %>% dplyr::slice(37:43),
+  process_bi_row(official_bracket %>% dplyr::slice(44:45)),
+  official_bracket %>% dplyr::slice(46:60),
   process_bi_row(official_bracket %>% dplyr::slice(61:62)),
   official_bracket %>% dplyr::slice(63:68)
   )
