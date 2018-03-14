@@ -1,5 +1,5 @@
 if (!require("pacman")) install.packages("pacman"); library(pacman)
-p_load(caret, MASS, e1071, xgboost) # load ML packages that unfortunately mask dplyr functions
+p_load(caret, MASS, e1071, xgboost, randomForest) # load ML packages that unfortunately mask dplyr functions
 p_load(tidyverse, Matrix)
 
 past_dat <- read_rds("data/model_ready/past_dat.Rds")
@@ -30,6 +30,12 @@ rf_model <- train(y = train_dat$lower_team_wins,
                   #    trControl = tc,
                   ntree = 150
 )
+
+rf_model <- randomForest(train_dat[, -1],
+                         train_dat$lower_team_wins,
+                         xtest = train_dat[, -1],
+                         ytest = train_dat$lower_team_wins,
+                         keep.forest=TRUE) 
 
 # prep data for xgboost
 train_xgb <- sparse.model.matrix(lower_team_wins ~ .-1, data = train_dat)
