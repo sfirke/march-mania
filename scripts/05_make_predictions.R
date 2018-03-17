@@ -2,7 +2,7 @@ if (!require("pacman")) install.packages("pacman"); library(pacman)
 p_load(caret, MASS) # load ML packages that unfortunately mask dplyr functions
 p_load(tidyverse, janitor)
 
-active_model <- read_rds("data/models/glm_all_data.Rds")
+active_model <- read_rds("data/models/glm_all_data_no_intercept.Rds")
 
 ### Make predictions for stage 1 ----------------------------
 
@@ -45,14 +45,14 @@ final_blank_with_data <- final_blank %>%
 
 levels(final_blank_with_data$lower_team_court_adv) <- c("N", "H", "A") # to make levels match the training set
 
-final_preds <- predict(active_model, final_blank_with_data, type = "prob")[, 2]
+predict(top_model, dummy_game, type = "prob")
 
 final_preds_to_send <- final_blank %>%
   dplyr::select(id) %>%
   mutate(Pred = final_preds)
 
 
-write_csv(final_preds_to_send, "data/predictions/final_glm.csv")
+write_csv(final_preds_to_send, "data/predictions/final_glm_plain.csv")
 
 # Average with 538 1st round predictions
 # Or if you don't mind the impurity of it, pick a first round game 0% in one submission and 100% in the other to gain an edge
@@ -73,7 +73,7 @@ write_csv(for_manual_editing, "data/predictions/blank_manual_list_of_games.csv")
 
 manual_inputs <- read_csv("data/predictions/mens_outside_round_1_inputs.csv") %>%
   filter(round1_game) %>%
-  mutate(vegas = parse_number(vegas),
+  mutate(vegas = parse_number(devigged),
          fivethirtyeight = parse_number(fivethirtyeight))
 
 joint <- left_join(
@@ -82,19 +82,17 @@ joint <- left_join(
     dplyr::select(id, lower_team_name, higher_team, fivethirtyeight, vegas)
 )
 
-# Will be NA if any values not present
-joint$hybrid <- rowMeans(joint %>% dplyr::select(Pred, fivethirtyeight, vegas))
+joint$hybrid <- rowMeans(joint %>% dplyr::select(Pred, fivethirtyeight, vegas), na.rm = TRUE)
 joint <- joint %>%
-  mutate(Pred = coalesce(hybrid, Pred)) %>%
-  dplyr::select(id, Pred)
+  dplyr::select(id, Pred = hybrid)
 
 # Flip a certain game both ways
-# Should be 8/9 seeds if that's what others use for modeling
-# And as close to 50/50 as possible.  Let's do Creighton/K-State for 2018
+# Should be 8/9 seeds if that's what others use for modeling?
+# And as close to 50/50 as possible.  Let's do Nevada/Texas for 2018
 final_preds_1 <- joint
-final_preds_1$Pred[final_preds_1$id == "2018_1166_1243"] <- 1
+final_preds_1$Pred[final_preds_1$id == "2018_1305_1400"] <- 1
 final_preds_2 <- joint
-final_preds_2$Pred[final_preds_2$id == "2018_1166_1243"] <- 0
+final_preds_2$Pred[final_preds_2$id == "2018_1305_1400"] <- 0
 
 tabyl(final_preds_1$Pred == final_preds_2$Pred) # validation
 
