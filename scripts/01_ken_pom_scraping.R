@@ -23,7 +23,7 @@ process_ken_pom_sheet <- function(dat){
   
   dat <- dat[-1, ] %>%
     select(rank, everything()) %>%
-    filter(!is.na(rank), rank != "Rank") %>%
+    filter(!is.na(rank), !rank %in% c("Rank", "Rk")) %>%
     mutate(rank = as.numeric(rank)) %>%
     mutate_at(vars(adj_EM:year), parse_number) %>%
     mutate(seed = as.numeric(seed))

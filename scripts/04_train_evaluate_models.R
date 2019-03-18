@@ -4,6 +4,33 @@ p_load(tidyverse, Matrix)
 
 past_dat <- read_rds("data/model_ready/past_dat.Rds")
 
+### Duplicate data flipping lower and upper
+
+mirror_past_dat <- past_dat %>%
+  mutate(
+    higher_ranked = case_when(
+      higher_ranked == "YES" ~ "NO",
+      higher_ranked == "NO" ~ "YES"
+    ),
+    lower_ranked = case_when(
+      lower_ranked == "YES" ~ "NO",
+      lower_ranked == "NO" ~ "YES"
+    ),
+    lower_team_court_adv = case_when(
+      lower_team_court_adv == "A" ~ "H",
+      lower_team_court_adv == "H" ~ "A",
+      lower_team_court_adv == "N" ~ "N"
+    ),
+    lower_team_wins = case_when(
+      lower_team_wins == "YES" ~ "NO",
+      lower_team_wins == "NO" ~ "YES"
+    )) %>%
+  mutate_if(is.numeric, function(x) {-x})
+
+past_dat <- bind_rows(past_dat, mirror_past_dat)
+
+character_vars <- lapply(past_dat, class) == "character"
+past_dat[, character_vars] <- lapply(past_dat[, character_vars], as.factor)
 
 #### Modelling  -------------------------------------------------------------------------------
 
