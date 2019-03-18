@@ -16,11 +16,11 @@ get_preseason_ranks <- function(year) {
     html_nodes(".td-left") %>%
     html_text
 
-  data_frame(rank, team, year = year)
+  tibble(rank, team, year = year)
 
 }
 
-all_preseason_data <- lapply(1962:2018, get_preseason_ranks) %>%
+all_preseason_data <- lapply(1962:2019, get_preseason_ranks) %>%
   bind_rows
 
 write_csv(all_preseason_data, "data/model_inputs/mens_cbb_preseason_rankings.csv", na = "")
