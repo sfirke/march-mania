@@ -48,7 +48,7 @@ get_kp_sheet <- function(sheet_n) {
 # Ken adds the seeds to the latest year shortly after the official bracket is announced; if scraping before that point, the first sheet will be different as it won't have seeds to separate out.
 # Prior to that point, the current year will have NA for seeds
 
-year_seq <- seq_along(2002:2018)
+year_seq <- seq_along(2002:2019)
 
 # this will grab all years of data from Google Sheets - takes time
 kp_all_years_raw <- year_seq %>% 
