@@ -24,7 +24,7 @@ preds_to_send <- blank_stage_1_preds %>%
   mutate(Pred = stage_1_preds)
 
 dir.create("data/predictions")
-write_csv(preds_to_send, "data/predictions/glm_1.csv")
+write_csv(preds_to_send, "data/predictions/xgb_1.csv")
 
 ### Make predictions for final round ----------------------------
 
