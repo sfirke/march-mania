@@ -49,23 +49,6 @@ base_glm <- glm(lower_team_wins ~ 0 + .,
                 data = train_dat,
                 family = binomial())
 
-tc <- trainControl(method = "repeatedcv", number = 4, repeats = 3,
-                   classProbs = TRUE,
-                   summaryFunction = multiClassSummary)
-
-rf_model <- train(y = train_dat$lower_team_wins,
-                  x = train_dat[, -1],
-                  method = "rf",
-                  do.trace = TRUE,
-                  #    trControl = tc,
-                  ntree = 150
-)
-
-rf_model <- randomForest(train_dat[, -1],
-                         train_dat$lower_team_wins,
-                         xtest = train_dat[, -1],
-                         ytest = train_dat$lower_team_wins,
-                         keep.forest=TRUE) 
 
 # prep data for xgboost
 train_xgb <- sparse.model.matrix(lower_team_wins ~ .-1, data = train_dat)
@@ -90,11 +73,8 @@ log_loss <- function(actual, predicted, eps=0.00001) {
 }
 
 
-glm_test_preds <- predict.glm(glm_model, test_dat, type = "response")
-log_loss(test_dat$lower_team_wins %>% as.numeric - 1, glm_test_preds)
-
-rf_test_preds <- predict(rf_model, test_dat, type = "prob")[, 2]
-log_loss(test_dat$lower_team_wins %>% as.numeric - 1, rf_test_preds)
+glm_test_preds <- predict(glm_model, test_dat, type = "prob")
+log_loss(test_dat$lower_team_wins %>% as.numeric - 1, glm_test_preds$YES)
 
 xgb_test_preds <- predict(xgb_model, test_xgb, type = "prob")[, 2]
 log_loss(test_dat$lower_team_wins %>% as.numeric - 1, xgb_test_preds)
@@ -102,25 +82,12 @@ log_loss(test_dat$lower_team_wins %>% as.numeric - 1, xgb_test_preds)
 xgbl_test_preds <- predict(xgbl_model, test_xgb, type = "prob")[, 2]
 log_loss(test_dat$lower_team_wins %>% as.numeric - 1, xgbl_test_preds)
 
-# Random Forest model has higher log loss, more extreme predictions
-# may be overconfident b/c not correctly using leaf class percentages?
-
 # simple binomial regression performs as well as xgboost, stick with it
 # retrain on all data
 
 top_model <- train(lower_team_wins ~ 0 + .,
                    data = past_dat,
                    method = "glm", family = "binomial")
-
-base_glm_all <- glm(lower_team_wins ~ . - 1,
-                data = past_dat,
-                family = binomial(link = "logit"))
-
-
-xgb_model_all <- train(y = past_dat$lower_team_wins,
-                   x = all_xgb,
-                   method = "xgbTree")
-
 
 dir.create("data/models")
 saveRDS(top_model, "data/models/glm_all_data_no_intercept.Rds")
