@@ -1,5 +1,5 @@
 # Script to predict win likelihood for college basketball games based on Ken Pomeroy ratings
-# by Sam Firke - 2016-2018
+# by Sam Firke - 2016-2019
 
 #### Data cleaning  -------------------------------------------------------------------------------
 
@@ -74,7 +74,11 @@ treat_past_results("data/kaggle/SecondaryTourneyCompactResults.csv") %>%
 team_crosswalk <- read_csv("data/ken_pom_to_kaggle_crosswalk.csv")
 
 # Join Pomeroy data to past data to make training set
+## In 2019 there are five records lost - so be it:
+# anti_join(kp_dat, team_crosswalk) %>% tabyl(team_name)
+# I'm not tinkering with the name crosswalk this year, no time
 kp_dat <- inner_join(kp_dat, team_crosswalk)
+
 
 ### Two functions that take a matchup (team1, team2, year) and merge in the correct predictor values, then calculate differences for predicting -----------
 # Done as functions since the blank matchups to predict on will also need this formatting
@@ -108,7 +112,7 @@ past_dat <- all_past_results %>%
                                                  wloc,
                                                  recode(wloc, "A" = "H", "H" = "A", "N" = "N")))) %>% # reframe home field advantage
   dplyr::select(lower_team_wins, contains("diff"), lower_team_court_adv, contains("rank"), -contains("all")) %>% # drop unneeded vars
-  filter(complete.cases(.)) %>%
+  filter(complete.cases(.)) %>% # this drops data from before 2002, when Ken Pom ratings come online
   as.data.frame()
 
 

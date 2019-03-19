@@ -12,14 +12,14 @@ rank,team,year
 1,Cincinnati,1963
 2,Duke,1963
 3,Kentucky,1963
-4,Loyola-Chicago,1963
+4,Loyola Chicago,1963
 5,West Virginia,1963
 6,Mississippi State,1963
 7,Oregon State,1963
 8,Illinois,1963
 9,St. Bonaventure (NY),1963
 10,Wisconsin,1963
-1,Loyola-Chicago,1964
+1,Loyola Chicago,1964
 2,New York,1964
 3,Cincinnati,1964
 4,Duke,1964
@@ -1228,3 +1228,28 @@ rank,team,year
 23,Seton Hall (NJ),2018
 24,Baylor,2018
 25,Texas A&M,2018
+1,Kansas,2019
+2,Kentucky,2019
+3,Gonzaga,2019
+4,Duke,2019
+5,Virginia,2019
+6,Tennessee,2019
+7,Nevada,2019
+8,North Carolina,2019
+9,Villanova,2019
+10,Michigan State,2019
+11,Auburn,2019
+12,Kansas State,2019
+13,West Virginia,2019
+14,Oregon,2019
+15,Virginia Tech,2019
+16,Syracuse,2019
+17,Florida State,2019
+18,Mississippi State,2019
+19,Michigan,2019
+20,TCU,2019
+21,UCLA,2019
+22,Clemson,2019
+23,LSU,2019
+24,Purdue,2019
+25,Washington,2019

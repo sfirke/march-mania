@@ -1,0 +1,120 @@
+---
+title: "Random Women's Bracket from Kaggle Submission"
+author: "Sam Firke & Emile Latour"
+date: "March 14, 2017"
+output: html_document
+---
+
+
+```{r}
+
+```
+
+```{r setup, include=FALSE}
+# Load packages
+knitr::opts_chunk$set(echo = FALSE)
+
+if (!require("pacman")) install.packages("pacman"); library(pacman)
+p_load(dplyr, readr, knitr, tidyr, purrr, here, forcats)
+
+# Load data
+# read full set of possible game IDs and predictions
+user_predictions <- read_csv(here("womens/data/predictions/final_glm.csv"))
+
+# read list of 64 teams, in order
+official_64 <- read_csv(here("womens/data/official_womens_bracket_2018.csv"))
+
+# Keep changing values of set.seed() if you want to be able to recreate a specific bracket
+# set.seed(1)
+```
+
+```{r game_functions}
+
+# function that takes two team IDs and grabs the prediction, then determines a winner
+simulate_winner_of <- function(team_ids){
+  lower_team <- min(team_ids)
+  higher_team <- max(team_ids)
+  
+  game_id <- paste("2018", lower_team, higher_team, sep = "_")
+  odds_lower_wins <- user_predictions[[2]][user_predictions$id == game_id]
+  if_else(runif(1) < odds_lower_wins,
+          lower_team, # lower_team wins if random # is below their win odds 
+          higher_team)
+}
+
+# function that takes an even-length data frame of teams, splits into pairs, turns the team IDs into a game ID, gets the winner
+process_bi_row <- function(bracket){
+  dat <- bracket %>%
+    mutate(grp = rep(1:(nrow(.)/2), each = 2)) # group every two rows
+  
+games <-  dat %>%
+    split(.$grp) 
+
+games <- games %>%
+  lapply(function(x) x[["id"]])
+
+winners <- unlist(lapply(games, simulate_winner_of))
+
+bracket %>% filter(id %in% winners)
+
+}
+
+```
+
+```{r play_in_games}
+# handle the 4 play-in games
+# not needed after play-in games so commenting out
+# official_64 <- bind_rows(
+#   official_bracket %>% dplyr::slice(1:16),
+#   official_bracket %>% dplyr::slice(20:34),
+#   process_bi_row(official_bracket %>% dplyr::slice(35:36)),
+#   official_bracket %>% dplyr::slice(37:43),
+#   process_bi_row(official_bracket %>% dplyr::slice(44:45)),
+#   official_bracket %>% dplyr::slice(46:60),
+#   process_bi_row(official_bracket %>% dplyr::slice(61:62)),
+#   official_bracket %>% dplyr::slice(63:68)
+#   )
+```
+
+## Regional Brackets
+
+```{r simulate_and_print, echo=FALSE}
+# Simulate each round and return winners
+options(knitr.kable.NA = '')
+
+round_32 <- process_bi_row(official_64) %>% mutate(round = "Round of 32")
+round_16 <- process_bi_row(round_32) %>% mutate(round = "Round of 16")
+round_8 <- process_bi_row(round_16) %>% mutate(round = "Round of 8")
+round_4 <- process_bi_row(round_8) %>% mutate(round = "Final Four")
+round_2 <- process_bi_row(round_4) %>% mutate(round = "Finals")
+round_1 <- process_bi_row(round_2) %>% mutate(round = "Champion")
+
+all_games <- bind_rows(round_32, round_16, round_8, round_4) %>%
+  mutate(team = fct_inorder(team))
+all_games$round <- factor(all_games$round, levels = c("Round of 32", "Round of 16", "Round of 8", "Final Four", "Finals", "Champion"))
+
+all_games %>%
+  split(.$region) %>%
+  map(spread, round, team) %>%
+  map(arrange, `Round of 32`) %>%
+  map(dplyr::select, -id) %>%
+  map(kable)
+
+```
+
+## Final Four
+
+```{r final_four}
+
+finals <- bind_rows(round_4, round_2, round_1)
+finals$round <- factor(finals$round, levels = c("Final Four", "Finals", "Champion"))
+
+finals %>%
+  mutate(team = fct_inorder(team)) %>%
+  spread(round, team) %>%
+  arrange(`Final Four`) %>%
+  dplyr::select(-region, -id) %>%
+  kable
+
+
+```
