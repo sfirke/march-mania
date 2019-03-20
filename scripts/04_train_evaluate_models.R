@@ -89,9 +89,9 @@ top_model <- train(lower_team_wins ~ 0 + .,
                    data = past_dat,
                    method = "glm", family = "binomial")
 
-top_model <- train(y = past_dat$lower_team_wins,
-                   x = all_xgb,
-                   method = "xgbTree")
+# top_model <- train(y = past_dat$lower_team_wins,
+#                    x = all_xgb,
+#                    method = "xgbTree")
 
 dir.create("data/models")
 saveRDS(top_model, "data/models/glm_all_data_no_intercept.Rds")
