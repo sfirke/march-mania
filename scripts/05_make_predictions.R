@@ -54,3 +54,33 @@ final_preds_to_send <- final_blank %>%
 
 write_csv(final_preds_to_send, "predictions/round 2/final_glm_plain.csv")
 
+
+# Hard code some games to have an edge at the prize
+# Might as well be a homer.
+# One entry with Michigan and Michigan St. in Sweet 16
+# Other entry with MSU in the Elite 8, Michigan in Final 4
+final_preds_little_homer <- final_preds_to_send
+final_preds_little_homer$Pred[final_preds_little_homer$id == "2019_1133_1277"] <- 0
+final_preds_little_homer$Pred[final_preds_little_homer$id == "2019_1277_1278"] <- 1
+final_preds_little_homer$Pred[final_preds_little_homer$id == "2019_1257_1277"] <- 0
+final_preds_little_homer$Pred[final_preds_little_homer$id == "2019_1276_1285"] <- 1
+final_preds_little_homer$Pred[final_preds_little_homer$id == "2019_1276_1305"] <- 1
+final_preds_little_homer$Pred[final_preds_little_homer$id == "2019_1196_1276"] <- 0
+
+final_preds_big_homer <- final_preds_little_homer
+final_preds_big_homer$Pred[final_preds_big_homer$id == "2019_1261_1277"] <- 0
+final_preds_big_homer$Pred[final_preds_big_homer$id == "2019_1268_1277"] <- 0
+final_preds_big_homer$Pred[final_preds_big_homer$id == "2019_1125_1277"] <- 0 # Belmont.  Not bothering with Temple or Yale
+final_preds_big_homer$Pred[final_preds_big_homer$id == "2019_1138_1276"] <- 0
+final_preds_big_homer$Pred[final_preds_big_homer$id == "2019_1276_1403"] <- 1 # Texas Tech, skip ASU/SJU and N Kentucky
+final_preds_big_homer$Pred[final_preds_big_homer$id == "2019_1211_1276"] <- 0
+final_preds_big_homer$Pred[final_preds_big_homer$id == "2019_1199_1276"] <- 0
+final_preds_big_homer$Pred[final_preds_big_homer$id == "2019_1266_1276"] <- 0
+final_preds_big_homer$Pred[final_preds_big_homer$id == "2019_1276_1393"] <- 1 # more not bothering here
+
+final_preds_big_homer$Pred[final_preds_big_homer$id == "2019_1181_1277"] <- 0 # And heck let's take MSU over Duke
+
+tabyl(final_preds_big_homer$Pred == final_preds_little_homer$Pred) # validation
+
+write_csv(final_preds_little_homer, "predictions/round 2/round_2_little_homer.csv")
+write_csv(final_preds_big_homer, "predictions/round 2/round_2_big_homer.csv")
